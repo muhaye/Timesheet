@@ -2,6 +2,19 @@
 #include <stdlib.h>     /* atoi */
 #include <time.h>
 
+int* day(int from, int to) {
+    int *day;
+    int total = (to +1)  - from;
+    day = malloc( total * sizeof(int));
+    int i;
+    for (i = 0 ; i < total ; i++) {
+        day[i] = i + from;
+    }
+
+    return day;
+}
+
+
 int LastDay (int iMonth, int iYear)
 {
     struct tm when;
@@ -55,5 +68,7 @@ int main(int argc, char *argv[]) {
                 LastDay(tm.tm_mon, current_year)
                 );
 
+    printf("total days for %d\n", day(FROM, TO)[ TO - FROM ] );
+ 
     return 0;
 }
