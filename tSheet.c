@@ -8,9 +8,69 @@ typedef struct {
     float hours;
 } Day_hours;
 
+typedef struct {
+    char sep_v   ;
+    char joint   ;
+    int col_with ;
+    Day_hours *day_hours;
+    int total;
+} Table;
+
+
+void printValue(Table table) {
+    char *header[2] = {"Day", "Hours"};
+    // print headers;
+    int i;
+    for(i = 0; i <table.total; i++ ) { 
+        //printf("TXT1: %9.9d TXT2 %9.9f  \n", dh[i].day, dh[i].hours );
+        printf("%c%10d%c%10.1f%c\n", 
+                table.sep_v, 
+                table.day_hours[i].day, 
+                table.sep_v, 
+                table.day_hours[i].hours, 
+                table.sep_v
+              );
+    }
+}
+
+
+void printHeaderValue(Table table) {
+    char *header[2] = {"Day", "Hours"};
+    // print headers;
+    printf("%c%10s%c%10s%c\n", 
+            table.sep_v, 
+            header[0], 
+            table.sep_v, 
+            header[1], 
+            table.sep_v
+          );
+}
+
+void printHeaderLine(Table table) {
+    char *sep = "----------------------";
+    // print headers;
+    printf("%c%.*s%c%.*s%c\n", 
+            table.joint, 
+            table.col_with,
+            sep, 
+            table.joint, 
+            table.col_with,
+            sep, 
+            table.joint
+          );
+}
+
+void printTable(Table table) {
+    printHeaderLine(table);
+    printHeaderValue(table);
+    printHeaderLine(table);
+    printValue(table);
+    printHeaderLine(table);
+}
+
 bool is_weekend(int d, int m, int y) {
     int week_day = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7; 
-    return week_day < 4;
+    return week_day < 5;
 } 
 
 Day_hours* day_hours(int from, int to, int month, int year) {
@@ -83,8 +143,24 @@ int main(int argc, char *argv[]) {
                 LastDay(tm.tm_mon, current_year)
                 );
 
-    Day_hours dh = day_hours(FROM, TO, tm.tm_mon, current_year)[ TO - FROM ];
-    printf("total days for %d => %.1f \n", dh.day, dh.hours );
- 
+    Day_hours *dh = day_hours(FROM, TO, tm.tm_mon, current_year);
+    int total = TO - FROM; 
+    Day_hours dh_last = dh[total];
+    printf("total days for %d => %.1f \n", dh_last.day, dh_last.hours );
+    int i;
+    for(i = 0; i <total; i++ ) { 
+        printf("TXT1: %9.9d TXT2 %9.9f  \n", dh[i].day, dh[i].hours );
+    }
+
+
+    Table table = {
+        .sep_v     = '|',
+        .joint     = '+',
+        .col_with  = 10,
+        .day_hours = dh,
+        .total =  total
+    }; 
+
+    printTable(table);
     return 0;
 }
