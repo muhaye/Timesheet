@@ -1,17 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>     /* atoi */
 #include <time.h>
+#include <stdbool.h>
 
-int* day(int from, int to) {
-    int *day;
+typedef struct {
+    int day;
+    float hours;
+} Day_hours;
+
+bool is_weekend(int d, int m, int y) {
+    int week_day = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7; 
+    return week_day < 4;
+} 
+
+Day_hours* day_hours(int from, int to, int month, int year) {
+    Day_hours *d_hours;
     int total = (to +1)  - from;
-    day = malloc( total * sizeof(int));
+    d_hours = malloc( total * sizeof(Day_hours));
+
     int i;
     for (i = 0 ; i < total ; i++) {
-        day[i] = i + from;
+        int day = i + from;
+        float hours = is_weekend(day, month, year) ? 7.5 :  0.0;
+        Day_hours dh  =  { day = day, .hours = hours } ;
+        d_hours[i] =  dh ;
     }
 
-    return day;
+    return d_hours;
 }
 
 
@@ -62,13 +77,14 @@ int main(int argc, char *argv[]) {
     printf("Timesheet for %d-%d-%d  -> %d-%d-%d  \n", 
                 current_year, 
                 tm.tm_mon, 
-                1, 
+                FROM, 
                 current_year, 
                 tm.tm_mon, 
                 LastDay(tm.tm_mon, current_year)
                 );
 
-    printf("total days for %d\n", day(FROM, TO)[ TO - FROM ] );
+    Day_hours dh = day_hours(FROM, TO, tm.tm_mon, current_year)[ TO - FROM ];
+    printf("total days for %d => %.1f \n", dh.day, dh.hours );
  
     return 0;
 }
