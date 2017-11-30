@@ -1,5 +1,11 @@
 #include <time.h>
+#include <stdbool.h>
 #include "last_day.h"
+
+bool is_weekend(int d, int m, int y) {
+    int week_day = (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7; 
+    return week_day < 5;
+} 
 
 int last_day (int i_month, int i_year) {
     struct tm when;
