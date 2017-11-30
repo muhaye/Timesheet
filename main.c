@@ -32,16 +32,33 @@ void printValue(Table table) {
     }
 }
 
+void printTotalValue(Table table) {
+	// print headers;
+	int sum_d = 0;
+	float sum_h = 0;
 
-void printHeaderValue(Table table) {
-    char *header[2] = {"Day", "Hours"};
+	for(int i = 0; i < table.total ; i ++){
+		sum_d = sum_d + table.day_hours[i].day;	
+		sum_h = sum_h + table.day_hours[i].hours;	
+	}
+
+	printf("%c%10d%c%10.1f%c\n", 
+			table.sep_v, 
+			sum_d, 
+			table.sep_v, 
+			sum_h, 
+			table.sep_v
+		  );
+}
+
+void printHeaderValue(const char *header[2]) {
     // print headers;
     printf("%c%10s%c%10s%c\n", 
-            table.sep_v, 
+            '|', 
             header[0], 
-            table.sep_v, 
+            '|', 
             header[1], 
-            table.sep_v
+            '|'
           );
 }
 
@@ -61,9 +78,19 @@ void printHeaderLine(Table table) {
 
 void printTable(Table table) {
     printHeaderLine(table);
-    printHeaderValue(table);
+	const char *header[] = {"Day", "Hours"};
+    printHeaderValue(header);
     printHeaderLine(table);
     printValue(table);
+    printHeaderLine(table);
+}
+
+void printTotal(Table table) {
+    printHeaderLine(table);
+	const char *header[] = {"Day", "Hours"};
+    printHeaderValue(header);
+    printHeaderLine(table);
+    printTotalValue(table);
     printHeaderLine(table);
 }
 
@@ -88,9 +115,7 @@ Day_hours* day_hours(int from, int to, int month, int year) {
     return d_hours;
 }
 
-
 int main(int argc, char *argv[]) {
-    // printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     int FROM     = atoi(argv[1]);
     int TO       = atoi(argv[2]);
 
@@ -112,11 +137,6 @@ int main(int argc, char *argv[]) {
     int total = TO - FROM; 
     Day_hours dh_last = dh[total];
     printf("total days for %d => %.1f \n", dh_last.day, dh_last.hours );
-    int i;
-    for(i = 0; i <total; i++ ) { 
-        printf("TXT1: %9.9d TXT2 %9.9f  \n", dh[i].day, dh[i].hours );
-    }
-
 
     Table table = {
         .sep_v     = '|',
@@ -127,5 +147,6 @@ int main(int argc, char *argv[]) {
     }; 
 
     printTable(table);
+    printTotal(table);
     return 0;
 }
