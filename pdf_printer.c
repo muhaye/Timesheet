@@ -14,7 +14,7 @@ void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data
             longjmp (env, 1); /* invoke longjmp() on error */
 }
 
-int my_pdf_printer(char *text) {
+int pdf_printer(Table table) {
 
     HPDF_Doc pdf;
     HPDF_Font font;
@@ -41,11 +41,21 @@ int my_pdf_printer(char *text) {
 
     page = HPDF_AddPage (pdf);
     /* print the title of the page (with positioning center). */
-    HPDF_Page_SetFontAndSize (page, font, 24);
-    tw = HPDF_Page_TextWidth (page, text);
+    HPDF_Page_SetFontAndSize (page, font, 10);
+    //tw = HPDF_Page_TextWidth (page, text);
     HPDF_Page_BeginText (page);
-    HPDF_Page_TextOut (page, (HPDF_Page_GetWidth(page) - tw) / 2,
-            HPDF_Page_GetHeight (page) - 50, text);
+    char day[3]; 
+    char hours[12];
+    int line_spane =  12;
+    HPDF_REAL p_top = HPDF_Page_GetHeight(page) - 50;
+    for(int i = 0; i <table.total; i++ ) { 
+
+        sprintf(day, "%2d", table.day_hours[i].day);
+        sprintf(hours, "%10.1f", table.day_hours[i].hours);
+        HPDF_Page_TextOut (page, 30, p_top - (i * line_spane ), day);
+        HPDF_Page_TextOut (page, 60, p_top - (i * line_spane ), hours);
+    }
+
     HPDF_Page_EndText (page);
     HPDF_SaveToFile (pdf, "bin/test.pdf");
 

@@ -53,7 +53,6 @@ int main(int argc, char *argv[]) {
 
     printTable(table);
     printTotal(table);
-    char *text = "Hello world";
-    my_pdf_printer(text);
+    pdf_printer(table);
     return 0;
 }
