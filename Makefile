@@ -5,19 +5,22 @@ CC = gcc
 PROG = pdf_printer.o print_table.o last_day.o main.o 
 
 output: $(addprefix $(BIN)/, $(PROG)) 
-	$(CC) $(CFLAGS) $(PROG) -o $(BIN)/output && $(BIN)/output 1 20
+	$(CC) $(CFLAGS) $(addprefix $(BIN)/, $(PROG)) -o $(BIN)/output && $(BIN)/output 1 20
 
-$(BIN)/main.o: main.c
-	$(CC) -c main.c
+$(BIN)/%.o: %.c 
+	$(CC) -c -o $@ $<
 
-$(BIN)/pdf_printer.o: pdf_printer.c pdf_printer.h
-	$(CC) -c -I/Users/muhaye/Py/Timesheet/libharu/include -Ilibharu/include pdf_printer.c 
+# j$(BIN)/main.o: main.c
+# j	$(CC) -c main.c
 
-$(BIN)/print_table.o: print_table.c print_table.h
-	$(CC) -c print_table.c 
+# j$(BIN)/pdf_printer.o: pdf_printer.c pdf_printer.h
+# j	$(CC) -c -I/Users/muhaye/Py/Timesheet/libharu/include -Ilibharu/include pdf_printer.c 
+
+# j$(BIN)/print_table.o: print_table.c print_table.h
+	# j$(CC) -c print_table.c 
 	
-$(BIN)/last_day.o: last_day.c last_day.h
-	$(CC) -c last_day.c 
+# j$(BIN)/last_day.o: last_day.c last_day.h
+# j	$(CC) -c last_day.c 
 	
 clean:
-	rm -rf *.o $(BIN)/output
+	rm -rf $(BIN)/*.o $(BIN)/output

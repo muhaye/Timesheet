@@ -31,7 +31,6 @@ int my_pdf_printer(char *text) {
         return 1;
     }
 
-
     /* set compression mode */
     HPDF_SetCompressionMode (pdf, HPDF_COMP_ALL);
 
@@ -48,7 +47,7 @@ int my_pdf_printer(char *text) {
     HPDF_Page_TextOut (page, (HPDF_Page_GetWidth(page) - tw) / 2,
             HPDF_Page_GetHeight (page) - 50, text);
     HPDF_Page_EndText (page);
-    HPDF_SaveToFile (pdf, "test.pdf");
+    HPDF_SaveToFile (pdf, "bin/test.pdf");
 
     return 0;
 }
