@@ -3,7 +3,7 @@
 #include <stdlib.h>     /* atoi */
 #include <time.h>
 #include "print_table.h"
-
+#include "pdf_printer.h"
 
 Day_hours* day_hours(int from, int to, int month, int year) {
     Day_hours *d_hours;
@@ -42,7 +42,6 @@ int main(int argc, char *argv[]) {
     Day_hours *dh             = day_hours(FROM, TO, tm.tm_mon, current_year);
     int total                 = (TO + 1) - FROM;
     Day_hours dh_last         = dh[total];
-    printf("total days for %d = > %.1f \n", dh_last.day, dh_last.hours );
 
     Table table = {
         .sep_v     = '|',
@@ -54,5 +53,7 @@ int main(int argc, char *argv[]) {
 
     printTable(table);
     printTotal(table);
+    char *text = "Hello world";
+    my_pdf_printer(text);
     return 0;
 }
