@@ -14,6 +14,42 @@ void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data
             longjmp (env, 1); /* invoke longjmp() on error */
 }
 
+int LINE_SPACE = 12;
+
+typedef struct frm frm;
+struct frm {
+    int x;
+    int y;    
+};
+
+frm frm_position[2] = {
+    { .x = 100, .y = 300},
+    { .x = 200, .y = 300} };
+
+void print_frame(HPDF_Page page,  int x, int y) {
+    /* print the lines of the page. */
+    HPDF_Page_SetLineWidth (page, 1);
+    HPDF_Page_Rectangle (page, x, y, 60, LINE_SPACE * 20);
+    HPDF_Page_Stroke (page);
+}
+
+void print_value(HPDF_Page page, HPDF_Font font, Table table, int x, int y) {
+
+    /* print the title of the page (with positioning center). */
+    HPDF_Page_SetFontAndSize (page, font, 10);
+    HPDF_Page_BeginText (page);
+    char day[3]; 
+    char hours[5];
+    int top = y - 10 + table.total * LINE_SPACE;
+    for(int i = 0; i <table.total; i++ ) { 
+        sprintf(day, "%2d", table.day_hours[i].day);
+        sprintf(hours, "%3.1f", table.day_hours[i].hours);
+        HPDF_Page_TextOut (page, x + 10, top - (i * LINE_SPACE ), day);
+        HPDF_Page_TextOut (page, x + 40, top - (i * LINE_SPACE ), hours);
+    }
+    HPDF_Page_EndText (page);
+}
+
 int pdf_printer(Table table) {
 
     HPDF_Doc pdf;
@@ -41,29 +77,19 @@ int pdf_printer(Table table) {
 
     page = HPDF_AddPage (pdf);
 
-    /* print the lines of the page. */
-    HPDF_Page_SetLineWidth (page, 1);
-    HPDF_Page_Rectangle (page, 50, 50, HPDF_Page_GetWidth(page) - 100,
-                HPDF_Page_GetHeight (page) - 110);
-    HPDF_Page_Stroke (page);
+    for(int i=0; i < 2; i++ ) {
+        print_frame(page, 
+                frm_position[i].x,
+                frm_position[i].y);
 
-    /* print the title of the page (with positioning center). */
-    HPDF_Page_SetFontAndSize (page, font, 10);
-    //tw = HPDF_Page_TextWidth (page, text);
-    HPDF_Page_BeginText (page);
-    char day[3]; 
-    char hours[12];
-    int line_spane =  12;
-    HPDF_REAL p_top = HPDF_Page_GetHeight(page) - 50;
-    for(int i = 0; i <table.total; i++ ) { 
-
-        sprintf(day, "%2d", table.day_hours[i].day);
-        sprintf(hours, "%10.1f", table.day_hours[i].hours);
-        HPDF_Page_TextOut (page, 30, p_top - (i * line_spane ), day);
-        HPDF_Page_TextOut (page, 60, p_top - (i * line_spane ), hours);
+        print_value(page, 
+                font,
+                table,
+                frm_position[i].x,
+                frm_position[i].y);
     }
 
-    HPDF_Page_EndText (page);
+
     HPDF_SaveToFile (pdf, "bin/test.pdf");
 
     return 0;
