@@ -22,9 +22,16 @@ struct frm {
     int y;    
 };
 
-frm frm_position[2] = {
+typedef struct range range;
+struct range {
+    int from;
+    int to;
+};
+
+frm frm_position[3] = {
     { .x = 100, .y = 300},
-    { .x = 200, .y = 300} };
+    { .x = 200, .y = 300},
+    { .x = 300, .y = 300} };
 
 void print_frame(HPDF_Page page,  int x, int y) {
     /* print the lines of the page. */
@@ -33,7 +40,11 @@ void print_frame(HPDF_Page page,  int x, int y) {
     HPDF_Page_Stroke (page);
 }
 
-void print_value(HPDF_Page page, HPDF_Font font, Table table, int x, int y) {
+void print_value(HPDF_Page page, 
+        HPDF_Font font, 
+        Table table, 
+        range from_to,  
+        int x, int y) {
 
     /* print the title of the page (with positioning center). */
     HPDF_Page_SetFontAndSize (page, font, 10);
@@ -41,11 +52,13 @@ void print_value(HPDF_Page page, HPDF_Font font, Table table, int x, int y) {
     char day[3]; 
     char hours[5];
     int top = y - 10 + table.total * LINE_SPACE;
-    for(int i = 0; i <table.total; i++ ) { 
+
+    for(int i = from_to.from; i < from_to.to; i++ ) { 
         sprintf(day, "%2d", table.day_hours[i].day);
         sprintf(hours, "%3.1f", table.day_hours[i].hours);
-        HPDF_Page_TextOut (page, x + 10, top - (i * LINE_SPACE ), day);
-        HPDF_Page_TextOut (page, x + 40, top - (i * LINE_SPACE ), hours);
+        int t = top - (i - from_to.from) * LINE_SPACE ;
+        HPDF_Page_TextOut (page, x + 10, t, day);
+        HPDF_Page_TextOut (page, x + 40, t, hours);
     }
     HPDF_Page_EndText (page);
 }
@@ -76,7 +89,7 @@ int pdf_printer(Table table) {
     HPDF_Page page;
 
     page = HPDF_AddPage (pdf);
-
+    range range[2] = { { .from = 0, .to = 15 } , { .from = 15, .to = table.total }};
     for(int i=0; i < 2; i++ ) {
         print_frame(page, 
                 frm_position[i].x,
@@ -85,6 +98,7 @@ int pdf_printer(Table table) {
         print_value(page, 
                 font,
                 table,
+                range[i], 
                 frm_position[i].x,
                 frm_position[i].y);
     }
