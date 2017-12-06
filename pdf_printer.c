@@ -3,12 +3,12 @@
 #include <stdio.h>  
 #include <setjmp.h>
 #include "hpdf.h"
+#include "read_rc_file.h"
 #include "pdf_printer.h"
 
 jmp_buf env;
 
-void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data)
-{
+void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data) {
         printf ("ERROR: error_no=%04X, detail_no=%d\n",
                       (unsigned int) error_no, (int) detail_no);
             longjmp (env, 1); /* invoke longjmp() on error */
@@ -46,26 +46,28 @@ void print_value(HPDF_Page page,
         range from_to,  
         int x, int y) {
 
+    struct nlist* result = read_rc_config();
+
     int num_elem = from_to.to - from_to.from + 1 ;
 
     print_frame(page, 
             x,
-            540 - num_elem * LINE_SPACE,
+            400 - num_elem * LINE_SPACE,
             (num_elem * LINE_SPACE) + 20
             );
 
     print_frame(page, 
             x,
-            540 - num_elem * LINE_SPACE,
+            400 - num_elem * LINE_SPACE,
             num_elem * LINE_SPACE
             );
 
-    int top = 530; 
+    int top = 390; 
 
     for(int i=0; i<2; i++ ) {
         print_frame(page, 
                 300,
-                540 - 2 * LINE_SPACE,
+                400 - 2 * LINE_SPACE,
                 (2 + i) * LINE_SPACE
                 );
     }
@@ -89,7 +91,54 @@ void print_value(HPDF_Page page,
         sum_h += table.day_hours[i].hours;
     
     sprintf(hours, "%5.1f", sum_h );
-    HPDF_Page_TextOut (page, 320, 520, hours);
+    HPDF_Page_TextOut (page, 320, 380, hours);
+    HPDF_Page_TextOut (page, 105, 405, "Date  Hours");
+    HPDF_Page_TextOut (page, 205, 405, "Date  Hours");
+    HPDF_Page_TextOut (page, 330, 405, "Total");
+
+    
+    HPDF_Page_SetFontAndSize (page, font, 7);
+    HPDF_Page_TextOut(page, 40, 80,lookup("note")->defn);
+
+    HPDF_Page_SetFontAndSize (page, font, 11);
+    int cursor_height = HPDF_Page_GetHeight(page) - 30 ;
+    HPDF_Page_TextOut(page, 40, cursor_height  , "TimeSheet") ;
+
+    HPDF_Page_SetFontAndSize (page, font, 10);
+    cursor_height -= 20;
+    HPDF_Page_TextOut(page, 40, cursor_height ,lookup("agency_name")->defn) ;
+
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height ,lookup("agency_address")->defn) ;
+
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height ,lookup("agency_location")->defn) ;
+
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height ,lookup("agency_postal_code")->defn) ;
+
+    result = lookup("agency_phone");
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height ,result->defn) ;
+
+    result = lookup("client");
+    cursor_height -= 40;
+    HPDF_Page_TextOut(page, 40, cursor_height , "Client:") ;
+    HPDF_Page_TextOut(page, 200, cursor_height , result->defn) ;
+
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height , "Client Contact Name:") ;
+    HPDF_Page_TextOut(page, 200, cursor_height ,lookup("contact")->defn) ;
+
+    cursor_height -= 12;
+    HPDF_Page_TextOut(page, 40, cursor_height , "Consultant Name:") ;
+    HPDF_Page_TextOut(page, 200, cursor_height ,lookup("name")->defn) ;
+
+    HPDF_Page_TextOut(page, 400, 160, "Consultant Signature:") ;
+    HPDF_Page_TextOut(page, 500, 160, "____________________________") ;
+
+    HPDF_Page_TextOut(page, 420, 130, "Client Signature:") ;
+    HPDF_Page_TextOut(page, 500, 130, "____________________________") ;
 
     HPDF_Page_EndText (page);
 }
@@ -120,6 +169,8 @@ int pdf_printer(Table table) {
     HPDF_Page page;
 
     page = HPDF_AddPage (pdf);
+    HPDF_Page_SetSize (page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_LANDSCAPE);
+
     range range[2] = { { .from = 0, .to = 15 },
                        { .from = 15, .to = table.total }
                          };

@@ -2,7 +2,7 @@ CFLAGS = -Wall -v -pedantic -std=c99 -L/usr/local/lib/ -lhpdf
 # LFLAGS = -lm 
 BIN = ./bin/
 CC = gcc
-PROG = pdf_printer.o print_table.o last_day.o main.o 
+PROG = pdf_printer.o print_table.o last_day.o main.o read_rc_file.o nlist.o
 
 output: $(addprefix $(BIN)/, $(PROG)) 
 	$(CC) $(CFLAGS) $(addprefix $(BIN)/, $(PROG)) -o $(BIN)/output 
