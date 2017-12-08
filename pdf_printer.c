@@ -31,9 +31,9 @@ struct range {
 };
 
 frm frm_position[3] = {
-    { .x = 100, .y = 300},
-    { .x = 200, .y = 300},
-    { .x = 300, .y = 300} };
+    { .x = 300, .y = 300},
+    { .x = 400, .y = 300},
+    { .x = 500, .y = 300} };
 
 void print_frame(HPDF_Page page,  int x, int y, int height) {
     /* print the lines of the page. */
@@ -105,20 +105,18 @@ void print_value(HPDF_Page page,
     print_frame(page, 
             x,
             400 - num_elem * LINE_SPACE,
-            (num_elem * LINE_SPACE) + 20
-            );
+            (num_elem * LINE_SPACE) + 20);
 
     print_frame(page, 
             x,
             400 - num_elem * LINE_SPACE,
-            num_elem * LINE_SPACE
-            );
+            num_elem * LINE_SPACE);
 
     int top = 390; 
 
     for(int i=0; i<2; i++ ) {
         print_frame(page, 
-                300,
+                500,
                 400 - 2 * LINE_SPACE,
                 (2 + i) * LINE_SPACE
                 );
@@ -126,6 +124,10 @@ void print_value(HPDF_Page page,
 
     HPDF_Page_SetFontAndSize(page, font, 10);
     HPDF_Page_BeginText(page);
+
+    char month[100];
+    sprintf(month, "Month: \t%s %d", "November", 2017 );
+    HPDF_Page_TextOut(page, 40, top, month ) ;
 
     char day[3]; 
     char hours[7];
@@ -136,6 +138,7 @@ void print_value(HPDF_Page page,
         int t = top - (i - from_to.from) * LINE_SPACE ;
         HPDF_Page_TextOut (page, x + 10, t, day);
         HPDF_Page_TextOut (page, x + 40, t, hours);
+        HPDF_Page_TextOut (page, x + 5, 405, "Date  Hours");
     }
 
     float sum_h = 0.0;
@@ -143,10 +146,8 @@ void print_value(HPDF_Page page,
         sum_h += table.day_hours[i].hours;
     
     sprintf(hours, "%5.1f", sum_h );
-    HPDF_Page_TextOut(page, 320, 380, hours);
-    HPDF_Page_TextOut(page, 105, 405, "Date  Hours");
-    HPDF_Page_TextOut(page, 205, 405, "Date  Hours");
-    HPDF_Page_TextOut(page, 330, 405, "Total");
+    HPDF_Page_TextOut(page, 520, 380, hours);
+    HPDF_Page_TextOut(page, 523, 402, "Total");
 
     HPDF_Page_EndText(page);
 }

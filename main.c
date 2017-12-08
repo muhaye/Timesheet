@@ -5,7 +5,7 @@
 #include "print_table.h"
 #include "pdf_printer.h"
 
-Day_hours* day_hours(int from, int to, int month, int year) {
+Day_hours* day_hours(int from, int to, int month, int year, int day_off) {
     Day_hours *d_hours;
     int total = (to +1)  - from;
     d_hours = malloc( total * sizeof(Day_hours));
@@ -13,7 +13,7 @@ Day_hours* day_hours(int from, int to, int month, int year) {
     int i;
     for (i = 0 ; i < total ; i++) {
         int day = i + from;
-        float hours = is_weekend(day, month, year) ? 7.5 :  0.0;
+        float hours = is_weekend(day, month, year) ? ( day_off != day ? 7.5 : 0.0 ) :  0.0;
         Day_hours dh  =  { .day = day, .hours = hours } ;
         d_hours[i] =  dh ;
     }
@@ -24,6 +24,12 @@ Day_hours* day_hours(int from, int to, int month, int year) {
 int main(int argc, char *argv[]) {
     int FROM     = atoi(argv[1]);
     int TO       = atoi(argv[2]);
+    int day_off  = 0;
+
+    // handle day off 
+    if ( argc > 3) {
+       day_off = atoi(argv[3]); 
+    }
 
     time_t t     = time(NULL);
     struct tm tm = *localtime(&t); // now
@@ -36,10 +42,9 @@ int main(int argc, char *argv[]) {
                 FROM, 
                 current_year, 
                 tm.tm_mon, 
-                last_day(tm.tm_mon, current_year)
-                );
+                last_day(tm.tm_mon, current_year));
 
-    Day_hours *dh             = day_hours(FROM, TO, tm.tm_mon, current_year);
+    Day_hours *dh             = day_hours(FROM, TO, tm.tm_mon, current_year, day_off);
     int total                 = (TO + 1) - FROM;
     Day_hours dh_last         = dh[total];
 

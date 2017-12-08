@@ -6,7 +6,7 @@ PROG = pdf_printer.o print_table.o last_day.o main.o read_rc_file.o nlist.o
 
 output: $(addprefix $(BIN)/, $(PROG)) 
 	$(CC) $(CFLAGS) $(addprefix $(BIN)/, $(PROG)) -o $(BIN)/output 
-	$(BIN)/output 1 30
+	$(BIN)/output 1 30 13
 
 $(BIN)/%.o: %.c 
 	$(CC) -c -o $@ $<
