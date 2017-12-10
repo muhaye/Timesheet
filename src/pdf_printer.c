@@ -194,7 +194,7 @@ int pdf_printer(Table table) {
                 frm_position[i].y);
     }
 
-    HPDF_SaveToFile (pdf, "bin/test.pdf");
+    HPDF_SaveToFile (pdf, "test.pdf");
 
     return 0;
 }

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "nlist.h"
 
 /* hash: form hash value for string s */
