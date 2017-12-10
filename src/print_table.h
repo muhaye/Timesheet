@@ -6,7 +6,7 @@ typedef struct {
     float hours;
 } Day_hours;
 
-typedef struct {
+typedef struct Table {
     char sep_v   ;
     char joint   ;
     int col_with ;

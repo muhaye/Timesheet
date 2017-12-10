@@ -5,6 +5,7 @@
 #include "hpdf.h"
 #include "read_rc_file.h"
 #include "pdf_printer.h"
+#include "print_table.h"
 
 jmp_buf env;
 
@@ -125,10 +126,20 @@ void print_value(HPDF_Page page,
 
     HPDF_Page_SetFontAndSize(page, font, 10);
     HPDF_Page_BeginText(page);
+            
+    // int current_year = table.tm_year + 1900;
+    char timelaps[100];
 
-    char month[100];
-    sprintf(month, "Month: \t%s %d", "November", 2017 );
-    HPDF_Page_TextOut(page, 40, top, month ) ;
+// sprintf(timelaps, "Timesheet for %d-%d-%d -> %d-%d-%d", 
+// 		current_year, 
+// 		table.day_hours[0].tm_mon, 
+// 		from_to.from, 
+// 		current_year, 
+// 		table.tm_mon, 
+// 		from_to.to);
+    	
+    sprintf(timelaps, "Month: \t%s %d", "November", 2017 );
+    HPDF_Page_TextOut(page, 40, top, timelaps) ;
 
     char day[3]; 
     char hours[7];

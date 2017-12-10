@@ -6,11 +6,16 @@
 #include "pdf_printer.h"
 #include "timesheet.h"
 
+/*
+ *
+ * day_off: a zero-end array of day_offs 
+ *   		ie: int day_off[5] = { 1, 5, 8,  13, 0 } ; // O is te the end of the array
+ */
 int is_day_off(int day, int* day_off) {
 	int *pd = day_off;
 
 	do{	
-		if ( day == *pd++ )
+		if( day == *pd++ )
 			return 1;
 	} while(*pd); 
 
@@ -18,23 +23,22 @@ int is_day_off(int day, int* day_off) {
 }
 
 Day_hours* day_hours(int from, int to, int month, int year, int *day_off) {
-    Day_hours *d_hours;
-    int total = (to +1)  - from;
-    d_hours = malloc( total * sizeof(Day_hours));
+	Day_hours *d_hours;
+	int total = (to +1)  - from;
+	d_hours = malloc( total * sizeof(Day_hours));
 
-    int i;
-    for (i = 0 ; i < total ; i++) {
+    for (int i = 0 ; i < total ; i++) {
         int day = i + from;
         float hours = !is_weekend(day, month, year) || is_day_off(day, day_off) ?  0.0 : 7.5 ;
-        Day_hours dh  =  { .day = day, .hours = hours } ;
-        d_hours[i] =  dh ;
+        Day_hours dh = { .day = day, .hours = hours } ;
+        d_hours[i] = dh ;
     }
 
     return d_hours;
 }
 
 int timesheet(int from, int to) {
-    int day_off[1] = 0; // O is te the end of the array
+    int day_off[1] = { 0 }; // O is te the end of the array
     //int day_off[5] = { 1, 5, 8,  13, 0 } ; // O is te the end of the array
     return timesheet_with_dayoff(from, to, day_off);
 }
@@ -54,16 +58,15 @@ int timesheet_with_dayoff(int from, int to,  int *day_off) {
                 tm.tm_mon, 
                 last_day(tm.tm_mon, current_year));
 
-    Day_hours *dh      = day_hours(from, to, tm.tm_mon, current_year, day_off);
-    int total          = (to + 1) - from;
+    Day_hours *dh = day_hours(from, to, tm.tm_mon, current_year, day_off);
 
-    Table table = {
-        .sep_v     = '|',
-        .joint     = '+',
-        .col_with  = 10,
-        .day_hours = dh,
-        .total =  total
-    }; 
+	Table table = {
+		.sep_v     = '|',
+		.joint     = '+',
+		.col_with  = 10,
+		.day_hours = dh,
+		.total =  (to + 1) - from
+	}; 
 
     printTable(table);
     printTotal(table);
