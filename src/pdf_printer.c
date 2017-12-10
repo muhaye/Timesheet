@@ -85,6 +85,7 @@ void print_text(HPDF_Page page, HPDF_Font font, HPDF_Font font_bold) {
     HPDF_Page_TextOut(page, 40, cursor_height , "Consultant Name:") ;
     HPDF_Page_TextOut(page, 200, cursor_height ,lookup("name")->defn) ;
 
+
     HPDF_Page_TextOut(page, 400, 160, "Consultant Signature:") ;
     HPDF_Page_TextOut(page, 500, 160, "____________________________") ;
 

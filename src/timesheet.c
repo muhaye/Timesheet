@@ -1,9 +1,10 @@
-#include "last_day.h"
 #include <stdio.h>
 #include <stdlib.h>     /* atoi */
 #include <time.h>
 #include "print_table.h"
+#include "last_day.h"
 #include "pdf_printer.h"
+#include "timesheet.h"
 
 Day_hours* day_hours(int from, int to, int month, int year, int day_off) {
     Day_hours *d_hours;
@@ -21,15 +22,13 @@ Day_hours* day_hours(int from, int to, int month, int year, int day_off) {
     return d_hours;
 }
 
-int main(int argc, char *argv[]) {
-    int FROM     = atoi(argv[1]);
-    int TO       = atoi(argv[2]);
-    int day_off  = 0;
+int timesheet(int from, int to) {
+    int day_off[0];
+    return timesheet_with_dayoff(from, to, day_off);
+}
 
-    // handle day off 
-    if ( argc > 3) {
-       day_off = atoi(argv[3]); 
-    }
+int timesheet_with_dayoff(int from, int to,  int *day_off_array) {
+    int day_off  = 0;
 
     time_t t     = time(NULL);
     struct tm tm = *localtime(&t); // now
@@ -39,14 +38,13 @@ int main(int argc, char *argv[]) {
     printf("Timesheet for %d-%d-%d  -> %d-%d-%d  \n", 
                 current_year, 
                 tm.tm_mon, 
-                FROM, 
+                from, 
                 current_year, 
                 tm.tm_mon, 
                 last_day(tm.tm_mon, current_year));
 
-    Day_hours *dh             = day_hours(FROM, TO, tm.tm_mon, current_year, day_off);
-    int total                 = (TO + 1) - FROM;
-    Day_hours dh_last         = dh[total];
+    Day_hours *dh      = day_hours(from, to, tm.tm_mon, current_year, day_off);
+    int total          = (to + 1) - from;
 
     Table table = {
         .sep_v     = '|',

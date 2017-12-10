@@ -1,18 +1,23 @@
 CFLAGS = -Wall -v -pedantic -std=c99 -L/usr/local/lib/ -lhpdf
 # LFLAGS = -lm 
-BIN = ./bin/
+BIN = bin
+SRC_FILES = $(wildcard src/*.c)
+OBJ_FILES = $(SRC_FILES:.c=.o)
 CC = gcc
-PROG = pdf_printer.o print_table.o last_day.o main.o read_rc_file.o nlist.o
+#PROG = %.o 
+# PROG = init.o timesheet.o pdf_printer.o print_table.o last_day.o main.o read_rc_file.o nlist.o	
 
-output: $(addprefix $(BIN)/, $(PROG)) 
-	$(CC) $(CFLAGS) $(addprefix $(BIN)/, $(PROG)) -o $(BIN)/output 
-	$(BIN)/output 1 30 13
 
-$(BIN)/%.o: %.c 
+output: $(OBJ_FILES) 
+	$(CC) $(CFLAGS) -o $@ $^ #$(BIN)/output 
+	#$(CC) $(CFLAGS) $(addprefix $(BIN)/, $(PROG)) -o $(BIN)/output 
+#	$(BIN)/output 1 30 13
+
+$(BIN)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c -o $@ $<
 
-# j$(BIN)/main.o: main.c
-# j	$(CC) -c main.c
+#$(BIN)/main.o: main.c
+	#$(CC) -c main.c
 
 # j$(BIN)/pdf_printer.o: pdf_printer.c pdf_printer.h
 # j	$(CC) -c -I/Users/muhaye/Py/Timesheet/libharu/include -Ilibharu/include pdf_printer.c 

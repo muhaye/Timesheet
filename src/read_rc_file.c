@@ -23,7 +23,6 @@ char *trimwhitespace(char *str)
 struct nlist* read_rc_config() {
     struct nlist *result;
         
-    install("ne", "why");
     char inname[100] ;
     sprintf(inname, "%s/%s", getenv("HOME"), rcfile);
 
