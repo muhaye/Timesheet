@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdlib.h>
 #include <stdio.h>  
+#include <time.h>
 #include <setjmp.h>
 #include "hpdf.h"
 #include "read_rc_file.h"
@@ -41,6 +42,31 @@ void print_frame(HPDF_Page page,  int x, int y, int height) {
     HPDF_Page_SetLineWidth (page, 1);
     HPDF_Page_Rectangle (page, x, y, 60, height);
     HPDF_Page_Stroke (page);
+}
+
+void print_date(HPDF_Page page, Table table, HPDF_Font font) {
+
+    HPDF_Page_BeginText(page);
+    HPDF_Page_SetFontAndSize(page, font, 10);
+    char timelaps[100];
+
+    struct tm tm = table.start_time;
+    int current_year = tm.tm_year + 1900;
+    int last = table.total + table.day_hours[0].day - 1 ;
+
+    sprintf(timelaps, "Timesheet: from %d-%d-%d to %d-%d-%d", 
+            current_year, 
+            tm.tm_mon, 
+            table.day_hours[0].day, 
+            current_year, 
+            tm.tm_mon, 
+            last);
+
+    printf("t: %s\n", timelaps);
+
+    HPDF_Page_TextOut(page, 40, 400 , timelaps) ;
+
+    HPDF_Page_EndText(page);
 }
 
 void print_text(HPDF_Page page, HPDF_Font font, HPDF_Font font_bold) {
@@ -124,25 +150,11 @@ void print_value(HPDF_Page page,
                 );
     }
 
-    HPDF_Page_SetFontAndSize(page, font, 10);
-    HPDF_Page_BeginText(page);
-            
-    // int current_year = table.tm_year + 1900;
-    char timelaps[100];
-
-// sprintf(timelaps, "Timesheet for %d-%d-%d -> %d-%d-%d", 
-// 		current_year, 
-// 		table.day_hours[0].tm_mon, 
-// 		from_to.from, 
-// 		current_year, 
-// 		table.tm_mon, 
-// 		from_to.to);
-    	
-    sprintf(timelaps, "Month: \t%s %d", "November", 2017 );
-    HPDF_Page_TextOut(page, 40, top, timelaps) ;
-
     char day[3]; 
     char hours[7];
+
+    HPDF_Page_SetFontAndSize(page, font, 10);
+    HPDF_Page_BeginText(page);
 
     for(int i = from_to.from; i < from_to.to; i++ ) { 
         sprintf(day, "%2d", table.day_hours[i].day);
@@ -195,6 +207,7 @@ int pdf_printer(Table table) {
                          };
 
     print_text(page, font, font_bold);
+    print_date(page, table, font);
 
     for(int i=0; i < 2; i++ ) {
         print_value(page, 
@@ -205,7 +218,14 @@ int pdf_printer(Table table) {
                 frm_position[i].y);
     }
 
-    HPDF_SaveToFile (pdf, "test.pdf");
+    // struct nlist* result = read_rc_config();
+    // HPDF_Page_TextOut(page, 200, cursor_height ,lookup("name")->defn) ;
+
+    struct tm tm = table.start_time;
+    char filename[250]; 
+    int year = tm.tm_year + 1900;
+    sprintf(filename, "timesheet.%d-%d.pdf", tm.tm_mon, year);
+    HPDF_SaveToFile (pdf, filename);
 
     return 0;
 }

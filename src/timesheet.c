@@ -6,13 +6,14 @@
 #include "pdf_printer.h"
 #include "timesheet.h"
 
+const int END_OF_INTS = 0 ;
 /*
  *
  * day_off: a zero-end array of day_offs 
  *   		ie: int day_off[5] = { 1, 5, 8,  13, 0 } ; // O is te the end of the array
  */
-int is_day_off(int day, int* day_off) {
-	int *pd = day_off;
+int is_day_off(int day, const int* day_off) {
+	const int *pd = day_off;
 
 	do{	
 		if( day == *pd++ )
@@ -22,7 +23,13 @@ int is_day_off(int day, int* day_off) {
 	return 0;
 }
 
-Day_hours* day_hours(int from, int to, int month, int year, int *day_off) {
+Day_hours* day_hours(
+		int from, 
+		int to, 
+		int month, 
+		int year, 
+		const int *day_off) {
+
 	Day_hours *d_hours;
 	int total = (to +1)  - from;
 	d_hours = malloc( total * sizeof(Day_hours));
@@ -43,20 +50,12 @@ int timesheet(int from, int to) {
     return timesheet_with_dayoff(from, to, day_off);
 }
 
-int timesheet_with_dayoff(int from, int to,  int *day_off) {
+int timesheet_with_dayoff(int from, int to, const int *day_off) {
 
     time_t t     = time(NULL);
     struct tm tm = *localtime(&t); // now
 
     int current_year = tm.tm_year + 1900;
-
-    printf("Timesheet for %d-%d-%d  -> %d-%d-%d  \n", 
-                current_year, 
-                tm.tm_mon, 
-                from, 
-                current_year, 
-                tm.tm_mon, 
-                last_day(tm.tm_mon, current_year));
 
     Day_hours *dh = day_hours(from, to, tm.tm_mon, current_year, day_off);
 
@@ -65,7 +64,8 @@ int timesheet_with_dayoff(int from, int to,  int *day_off) {
 		.joint     = '+',
 		.col_with  = 10,
 		.day_hours = dh,
-		.total =  (to + 1) - from
+		.start_time = tm,
+		.total =  to + 1 - from
 	}; 
 
     printTable(table);
