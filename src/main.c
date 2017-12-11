@@ -3,6 +3,7 @@
 #include <stdlib.h>    /* for exit */
 #include <unistd.h>
 #include <getopt.h>
+#include <regex.h>
 #include "main.h"
 #include "timesheet.h"
 #include "init.h"
@@ -15,11 +16,11 @@ int main(int argc, char **argv) {
     int this_option_optind = optind ? optind : 1;
     int option_index = 0;
     static struct option long_options[] = {
-      {"add",     no_argument,       0,  0 },
+      {"add",     required_argument, 0, 'r'},
       {"init",    no_argument,       0, 'i'},
       {"delete",  required_argument, 0,  0 },
       {"verbose", no_argument,       0,  0 },
-      {"create",  required_argument, 0, 'c'},
+      {"list",    required_argument, 0, 'c'},
       {"file",    required_argument, 0,  0 },
       {0,         0,                 0,  0 }
     };
@@ -30,6 +31,51 @@ int main(int argc, char **argv) {
       break;
 
     switch (c) {
+      case 'r':
+          
+        printf("option %s", long_options[option_index].name);
+        if (optarg) {
+            regex_t regex;
+            int reti;
+            size_t maxGroups = 3;
+            regmatch_t groupArray[maxGroups];
+           
+            /* Compile regular expression */
+            reti = regcomp(&regex, "(r([0-9]{1,2})-([0-9]{1,2}))\\W+", 0);
+            if (reti) {
+                    fprintf(stderr, "Could not compile regex\n");
+                    exit(1);
+            }
+
+            /* Execute regular expression */
+            reti = regexec(&regex, optarg, maxGroups, groupArray, 0);
+            if (!reti) {
+                char from[2];
+                char to[2];
+                
+                sprintf(from,"%.*s", 0, 
+                        groupArray[1].rm_eo - groupArray[1].rm_so, 
+                        optarg + 1);
+                printf("add start at %s ", from );
+            }
+            else if (reti == REG_NOMATCH) {
+                printf("option %s is not valid", optarg);
+            }
+            else {
+                    regerror(reti, &regex, optarg, sizeof(optarg));
+                        fprintf(stderr, "Regex match failed: %s\n", optarg);
+                            exit(1);
+            }
+
+            /* Free memory allocated to the pattern buffer by regcomp() */
+            regfree(&regex);
+
+
+        }
+
+        printf("\n");
+
+        break;
       case 0:
         printf("option %s", long_options[option_index].name);
         if (optarg)
