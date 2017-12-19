@@ -7,48 +7,51 @@ int main() {
    int err;
    regex_t preg;
    const char *str_request = "r11-31";
-   const char *str_regex = "r([0-3]?[0-9]{1})-([0-3]?[0-9]{1})()";
+   const char *str_regex = "r([0-3]?[0-9]{1})-([0-3]?[0-9]{1})";
 
    err = regcomp (&preg, str_regex, REG_EXTENDED);
    if (err == 0)
    {
-      int match, match_count;
-      match_count = 3;
+      int match;
       size_t nmatch = 0;
       regmatch_t *pmatch = NULL;
       
-      nmatch = preg.re_nsub;
+      nmatch = preg.re_nsub + 1 ;
       pmatch = malloc (sizeof (*pmatch) * nmatch);
       if (pmatch)
       {
          match = regexec (&preg, str_request, nmatch, pmatch, 0);
+
          regfree (&preg);
+
          if (match == 0)
          {
-            char *word[match_count];
-            int start[match_count]; 
-            int end[match_count];
-            size_t size[match_count];
+            char *word[nmatch];
+            int start[nmatch]; 
+            int end[nmatch];
+            size_t size[nmatch];
+            printf("nmatch %i\n", nmatch);
             
-            for (int i = 0; i < match_count  ; i++) {
+            for (int i = 0; i < nmatch; i++) {
                 start[i]= pmatch[i].rm_so;
                 end[i] = pmatch[i].rm_eo;
                 size[i] = end[i] - start[i];
                 
                 printf ("match: [%i-%i] %i => %.*s\n", 
-                start[i], 
-                end[i], 
-                i, 
-                size[i],
-                &str_request[start[i]]);
-
+                        start[i], 
+                        end[i], 
+                        i,
+                        size[i],
+                        &str_request[start[i]]);
             }
             
          }
+
          else if (match == REG_NOMATCH)
          {
             printf ("%s n\'est pas une adresse internet valide\n", str_request);
          }
+
          else
          {
             char *text;
