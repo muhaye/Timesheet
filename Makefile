@@ -1,4 +1,4 @@
-CFLAGS = -Wall -v -pedantic -std=c99 -L/usr/local/lib/ -lhpdf -Ilibharu/include
+CFLAGS = -g -Wall -v -pedantic -std=c99 -L/usr/local/lib/ -lhpdf -Ilibharu/include
 
 SRC := src
 OBJ := obj
@@ -9,8 +9,11 @@ OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 all: $(OBJECTS)
 	$(CC) $(CFLAGS)  $^ -o $@
 
+all_g: $(OBJECTS)
+	$(CC) $(CFLAGS)  $^ -g -o $@
+
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CC) -I$(SRC) -c $< -o $@
+	$(CC) -I$(SRC) -g -c $< -o $@
 
 clean:
 	rm -f $(OBJ)/*o all
