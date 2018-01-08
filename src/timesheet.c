@@ -46,7 +46,6 @@ Day_hours* day_hours(
 
 int timesheet(int from, int to) {
     int day_off[1] = { 0 }; // O is te the end of the array
-    //int day_off[5] = { 1, 5, 8,  13, 0 } ; // O is te the end of the array
     return timesheet_with_dayoff(from, to, day_off);
 }
 
