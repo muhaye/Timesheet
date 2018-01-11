@@ -18,7 +18,7 @@ void printTotalValue(Table table) {
 	float sum_h = 0;
 
 	for(int i = 0; i < table.total ; i ++){
-		sum_d = sum_d + table.day_hours[i].day;	
+		sum_d = sum_d + (table.day_hours[i].hours > 0.0 ? 1 : 0 );
 		sum_h = sum_h + table.day_hours[i].hours;	
 	}
 
