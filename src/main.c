@@ -12,9 +12,6 @@ int main(int argc, char **argv) {
     int c;
     int digit_optind = 0;
 
-    int err;
-    regex_t preg;
-    const char *str_regex = "r([0-3]?[0-9]{1})-([0-3]?[0-9]{1})";
 
     while (1) {
         int this_option_optind = optind ? optind : 1;
@@ -38,25 +35,28 @@ int main(int argc, char **argv) {
             case 'r':
 
                 printf(" with arg %s\n", optarg);
+                int err;
+                regex_t preg;
+                const char *str_regex = "r([0-3]?[0-9]{1})-([0-3]?[0-9]{1})";
                 const char *str_request = optarg; 
 
                 err = regcomp (&preg, str_regex, REG_EXTENDED);
-                if (err == 0)
-                {
+                if (err == 0) {
+
                     int match;
                     size_t nmatch = 0;
                     regmatch_t *pmatch = NULL;
 
                     nmatch = preg.re_nsub + 1 ;
                     pmatch = malloc (sizeof (*pmatch) * nmatch);
-                    if (pmatch)
-                    {
+                    if (pmatch) {
+
                         match = regexec (&preg, str_request, nmatch, pmatch, 0);
 
                         regfree (&preg);
 
-                        if (match == 0)
-                        {
+                        if (match == 0) {
+
                             int from;
                             int to; 
                             char *word[nmatch];
@@ -66,10 +66,11 @@ int main(int argc, char **argv) {
                             printf("nmatch %i\n", nmatch);
 
                             for (int i = 0; i < nmatch; i++) {
+
                                 char day[5];
-                                start[i]= pmatch[i].rm_so;
-                                end[i] = pmatch[i].rm_eo;
-                                size[i] = end[i] - start[i];
+                                start[i] = pmatch[i].rm_so;
+                                end[i]   = pmatch[i].rm_eo;
+                                size[i]  = end[i] - start[i];
 
                                 if ( i > 0 )    {
                                     sprintf(day, "%.*s", 

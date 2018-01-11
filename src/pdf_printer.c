@@ -51,20 +51,12 @@ void print_date(HPDF_Page page, Table table, HPDF_Font font) {
     char timelaps[100];
 
     struct tm tm = table.start_time;
-    int current_year = tm.tm_year + 1900;
-    int last = table.total + table.day_hours[0].day - 1 ;
 
-    sprintf(timelaps, "Timesheet: from %d-%d-%d to %d-%d-%d", 
-            current_year, 
-            tm.tm_mon, 
-            table.day_hours[0].day, 
-            current_year, 
-            tm.tm_mon, 
-            last);
+    char sTimesheetMonth[30];
+    strftime(sTimesheetMonth, 30, "%B, %Y ", &tm);
+    sprintf (timelaps, "Timesheet for %s \n", sTimesheetMonth);
 
-    printf("t: %s\n", timelaps);
-
-    HPDF_Page_TextOut(page, 40, 400 , timelaps) ;
+    HPDF_Page_TextOut(page, 40, 400, timelaps) ;
 
     HPDF_Page_EndText(page);
 }
@@ -209,7 +201,7 @@ int pdf_printer(Table table) {
     print_text(page, font, font_bold);
     print_date(page, table, font);
 
-    for(int i=0; i < 2; i++ ) {
+    for(int i=0; i < 2; i++) {
         print_value(page, 
                 font,
                 table,
@@ -223,8 +215,11 @@ int pdf_printer(Table table) {
 
     struct tm tm = table.start_time;
     char filename[250]; 
-    int year = tm.tm_year + 1900;
-    sprintf(filename, "timesheet.%d-%d.pdf", tm.tm_mon, year);
+ 
+    char sTimesheetMonth[30];
+    strftime(sTimesheetMonth, 30, "%B.%Y", &tm);
+    sprintf (filename, "timesheet.%s.pdf", sTimesheetMonth);
+
     HPDF_SaveToFile (pdf, filename);
 
     return 0;

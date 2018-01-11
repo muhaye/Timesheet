@@ -31,14 +31,14 @@ Day_hours* day_hours(
 		const int *day_off) {
 
 	Day_hours *d_hours;
-	int total = (to +1)  - from;
-	d_hours = malloc( total * sizeof(Day_hours));
+	int total = to + 1 - from;
+	d_hours   = malloc( total * sizeof(Day_hours));
 
-    for (int i = 0 ; i < total ; i++) {
-        int day = i + from;
-        float hours = !is_weekend(day, month, year) || is_day_off(day, day_off) ?  0.0 : 7.5 ;
-        Day_hours dh = { .day = day, .hours = hours } ;
-        d_hours[i] = dh ;
+    for (int i= 0 ; i < total ; i++) {
+        int day      = i + from;
+        float hours  = !is_weekend(day, month, year) || is_day_off(day, day_off) ?  0.0 : 7.5 ;
+        Day_hours dh = { .day = day, .hours = hours };
+        d_hours[i]   = dh ;
     }
 
     return d_hours;
@@ -54,6 +54,14 @@ int timesheet_with_dayoff(int from, int to, const int *day_off) {
     time_t t     = time(NULL);
     struct tm tm = *localtime(&t); // now
 
+    tm.tm_mon--;
+    mktime(&tm);
+    printf ("Current local time and date: %s", asctime(&tm));
+
+    char sTimesheetMonth[30];
+    strftime(sTimesheetMonth, 30, "%B, %Y", &tm);
+    printf ("Timesheet for %s \n", sTimesheetMonth);
+ 
     int current_year = tm.tm_year + 1900;
 
     Day_hours *dh = day_hours(from, to, tm.tm_mon, current_year, day_off);
