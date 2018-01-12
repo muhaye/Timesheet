@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
                         }
                         else if (match == REG_NOMATCH)
                         {
-                            printf ("%s n\'est pas une adresse internet valide\n", str_request);
+                            printf ("%s is not a valid argument", str_request);
                         }
 
                         else
