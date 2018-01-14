@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
                 int off_error = 0;
                 Days_range off_dr = day_parse(optarg, &off_error);
                 int j = 0; 
-                for (int i = off_dr.from;  i < off_dr.to; i++) { 
-                    day_off[j] = i;
+                for (int i = off_dr.from;  i <= off_dr.to; i++) { 
+                    day_off[j++] = i;
                 } 
 
                 printf(" with arg %s", optarg);
