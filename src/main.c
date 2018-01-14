@@ -3,7 +3,6 @@
 #include <stdlib.h>    /* for exit */
 #include <unistd.h>
 #include <getopt.h>
-#include <regex.h>
 #include "main.h"
 #include "timesheet.h"
 #include "init.h"
@@ -12,6 +11,9 @@
 int main(int argc, char **argv) {
     int c;
     int digit_optind = 0;
+
+    Days_range dr;
+    int *day_off = (int [20]) { END_OF_INTS } ; 
 
     while (1) {
         int this_option_optind = optind ? optind : 1;
@@ -39,18 +41,28 @@ int main(int argc, char **argv) {
                 int error = 0;
                 const char *str_request = optarg; 
 
-                Days_range dr = day_parse(optarg, &error);
+                dr = day_parse(optarg, &error);
                 if ( error == 1 ) {
 
                     fprintf (stderr, "Memoire insuffisante\n");
                     exit (EXIT_FAILURE);
-                }else {
-
-                    const int day_off[20] = { 17, 18, 19, 20, 21, 22, 25, 26, 27, END_OF_INTS };
-                    timesheet_with_dayoff(dr.from, dr.to, day_off);
                 }
+
                 printf(" with arg %s", optarg);
 
+                break;
+            case 'o':
+
+                printf("option o %s", long_options[option_index].name);
+
+                int off_error = 0;
+                Days_range off_dr = day_parse(optarg, &off_error);
+                int j = 0; 
+                for (int i = off_dr.from;  i < off_dr.to; i++) { 
+                    day_off[j] = i;
+                } 
+
+                printf(" with arg %s", optarg);
 
                 break;
             case 0:
@@ -105,6 +117,10 @@ int main(int argc, char **argv) {
         while (optind < argc)
             printf("%s ", argv[optind++]);
         printf("\n");
+    }else{
+        if (dr.from > 0 ) {
+            timesheet_with_dayoff(dr.from, dr.to, day_off);
+        }
     }
 
     exit(EXIT_SUCCESS);
