@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
         int option_index = 0;
         static struct option long_options[] = {
             {"init",    no_argument,       0, 'i'},
-            {"work",    required_argument, 0, 'r'},
+            {"work",    required_argument, 0, 'w'},
             {"off",     required_argument, 0, 'o'},
             {"verbose", no_argument,       0,  0 },
             {"list",    required_argument, 0, 'c'},
@@ -34,10 +34,10 @@ int main(int argc, char **argv) {
             break;
 
         switch (c) {
-            case 'r':
+            case 'w':
 
-                printf("option %s", long_options[option_index].name);
-
+                printf("with --work %s\n", optarg);
+                
                 int error = 0;
                 const char *str_request = optarg; 
 
@@ -48,33 +48,41 @@ int main(int argc, char **argv) {
                     exit (EXIT_FAILURE);
                 }
 
-                printf(" with arg %s", optarg);
-
                 break;
             case 'o':
 
-                printf("option o %s", long_options[option_index].name);
+                printf("option --off %s\n", optarg);
+               
+                if (optarg[0] == 'r') {
 
-                int off_error = 0;
-                Days_range off_dr = day_parse(optarg, &off_error);
-                int j = 0; 
-                for (int i = off_dr.from;  i <= off_dr.to; i++) { 
-                    day_off[j++] = i;
+                    int off_error = 0;
+                    Days_range off_dr = day_parse(optarg, &off_error);
+                    int j = 0; 
+                    for (int i = off_dr.from;  i <= off_dr.to; i++) { 
+                        day_off[j++] = i;
+                    } 
+                } else if (optarg[0] == 'd') {
+                    char **tokens;
+                    char *str_days = &optarg[1];
+                    tokens = str_split(str_days, ',');
+
+                     if (tokens) {
+                         int i;
+                         for (i = 0; *(tokens + i); i++) {
+                             day_off[i] = atoi(*(tokens + i));
+                             printf("month=[%s]\n", *(tokens + i));
+                             free(*(tokens + i));
+                         }
+                         printf("\n");
+                         free(tokens);
+                     }
+
+                     //day_off = (int[12] ) { 12, 13, 14, 15, END_OF_INTS } ;
+
                 } 
 
-                printf(" with arg %s", optarg);
-
                 break;
-            case 0:
-                printf("option %s", long_options[option_index].name);
-                if (optarg)
-                    printf(" with arg %s", optarg);
-                printf("\n");
 
-                const int day_off[2] = { 13, END_OF_INTS };
-                timesheet_with_dayoff(1, 30, day_off);
-
-                break;
             case 'i':
                 // Create working directory if it does not exits	
                 init_working_dir();

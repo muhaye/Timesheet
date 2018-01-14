@@ -6,6 +6,9 @@ OBJ := obj
 SOURCES := $(wildcard $(SRC)/*.c)
 OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 
+#./all --work r1-21 --off d12,13,14
+#./all --work r1-21 --off r5-15
+
 all: $(OBJECTS)
 	$(CC) $(CFLAGS)  $^ -o $@
 

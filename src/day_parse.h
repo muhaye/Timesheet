@@ -9,4 +9,6 @@ struct {
 
 Days_range day_parse(const char *pattern, int *error);
 
+char** str_split(char* a_str, const char a_delim);
+
 #endif
