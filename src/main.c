@@ -23,8 +23,6 @@ int main(int argc, char **argv) {
             {"work",    required_argument, 0, 'w'},
             {"off",     required_argument, 0, 'o'},
             {"verbose", no_argument,       0,  0 },
-            {"list",    required_argument, 0, 'c'},
-            {"file",    required_argument, 0,  0 },
             {0,         0,                 0,  0 }
         };
 
@@ -76,8 +74,6 @@ int main(int argc, char **argv) {
                          printf("\n");
                          free(tokens);
                      }
-
-                     //day_off = (int[12] ) { 12, 13, 14, 15, END_OF_INTS } ;
 
                 } 
 

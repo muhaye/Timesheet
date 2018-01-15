@@ -35,7 +35,7 @@ Days_range day_parse(const char *pattern, int *error) {
                 int start[nmatch]; 
                 int end[nmatch];
                 size_t size[nmatch];
-                printf("nmatch %i\n", nmatch);
+                printf("nmatch %lu\n", nmatch);
 
                 for (int i = 0; i < nmatch; i++) {
 
@@ -46,7 +46,7 @@ Days_range day_parse(const char *pattern, int *error) {
 
                     if ( i > 0 )    {
                         sprintf(day, "%.*s", 
-                                size[i],
+                                (int)size[i],
                                 &pattern[start[i]]);
 
                         if ( i == 1 ) 
@@ -59,7 +59,7 @@ Days_range day_parse(const char *pattern, int *error) {
                             start[i], 
                             end[i], 
                             i,
-                            size[i],
+                            (int) size[i],
                             &pattern[start[i]]);
                 }
 
