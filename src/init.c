@@ -41,11 +41,17 @@ void prompt_init() {
     question[NAME]               = "Enter contact name:";
     question[NOTE]               = "Enter a footer note:";
 
-    char answer[100];
-    for (int i = 0; i < sizeof(question) ; i ++ ) {
-        printf("question %s \n", question[i] );
-        scanf ("%s", answer);
-        printf ("You entered: %s\n", answer);
+    char *answer[9];
+    for (int i = 0; i < 9; i++ ) {
+        printf("question [%i] %s \n", i, question[i] );
+       // scanf ("%s", answer[i] );
     }
+
+    for (int i = 0; i < 9; i++ ) {
+        //printf("answer %s \n", answer[i] );
+    }
+    
+
+
 }
 
