@@ -74,33 +74,22 @@ int main(int argc, char **argv) {
                          printf("\n");
                          free(tokens);
                      }
-
                 } 
 
                 break;
 
             case 'i':
                 // Create working directory if it does not exits	
+                printf("'%s'... \n Create working directory if it does not exits\n",
+                        long_options[option_index].name);
                 init_working_dir();
-                break;
-            case '0':
-            case '1':
-            case '2':
-                if (digit_optind != 0 && digit_optind != this_option_optind)
-                    printf("digits occur in two different argv-elements.\n");
-                digit_optind = this_option_optind;
-                printf("option %c\n", c);
+                // Prompt init question
+                prompt_init();
+
+
                 break;
 
-            case 'a':
-                printf("option a\n");
-                break;
-
-            case 'b':
-                printf("option b\n");
-                break;
-
-            case 'c':
+            case 'v':
                 printf("option c with value '%s'\n", optarg);
                 break;
 

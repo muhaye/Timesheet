@@ -16,3 +16,36 @@ void init_working_dir() {
 		mkdir(WORKING_DIR, 0754);
 	}
 }
+
+
+void prompt_init() {
+
+    const int CLIENT              = 0; 
+    const int AGENCY_NAME         = 1;
+    const int AGENCY_ADDRESS      = 2;
+    const int AGENCY_LOCATION     = 3;
+    const int AGENCY_POSTAL_CODE  = 4;
+    const int AGENCY_PHONE        = 5;
+    const int CONTACT             = 6;
+    const int NAME                = 7;
+    const int NOTE                = 8;
+
+    char *question[9];
+    question[CLIENT]             = "Enter client name:";
+    question[AGENCY_NAME]        = "Enter Agency name:";
+    question[AGENCY_ADDRESS]     = "Enter Agency address:";
+    question[AGENCY_LOCATION]    = "Enter Agency location:";
+    question[AGENCY_POSTAL_CODE] = "Enter Agency postal code:";
+    question[AGENCY_PHONE]       = "Enter Agency postal code:";
+    question[CONTACT]            = "Enter Agency phone:";
+    question[NAME]               = "Enter contact name:";
+    question[NOTE]               = "Enter a footer note:";
+
+    char answer[100];
+    for (int i = 0; i < sizeof(question) ; i ++ ) {
+        printf("question %s \n", question[i] );
+        scanf ("%s", answer);
+        printf ("You entered: %s\n", answer);
+    }
+}
+
