@@ -13,7 +13,7 @@
 
 void printValue(Table table) {
     for(int i = 0; i <table.total; i++ ) { 
-        printf("%c%10d%c%10.1f%c\n", 
+        printf("%c%5d     %c%7.1f   %c\n", 
                 table.sep_v, 
                 table.day_hours[i].day, 
                 table.sep_v, 
@@ -68,7 +68,7 @@ void printHeaderLine(Table table) {
 
 void printTable(Table table) {
     printHeaderLine(table);
-	const char *header[] = {"Day", "Hours"};
+	const char *header[] = {"Day   ", "Hours   "};
     printHeaderValue(header);
     printHeaderLine(table);
     printValue(table);
