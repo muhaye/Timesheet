@@ -20,38 +20,34 @@ void init_working_dir() {
 
 void prompt_init() {
 
-    const int CLIENT              = 0; 
-    const int AGENCY_NAME         = 1;
-    const int AGENCY_ADDRESS      = 2;
-    const int AGENCY_LOCATION     = 3;
-    const int AGENCY_POSTAL_CODE  = 4;
-    const int AGENCY_PHONE        = 5;
-    const int CONTACT             = 6;
-    const int NAME                = 7;
-    const int NOTE                = 8;
-
-    char *question[9];
-    question[CLIENT]             = "Enter client name:";
-    question[AGENCY_NAME]        = "Enter Agency name:";
-    question[AGENCY_ADDRESS]     = "Enter Agency address:";
-    question[AGENCY_LOCATION]    = "Enter Agency location:";
-    question[AGENCY_POSTAL_CODE] = "Enter Agency postal code:";
-    question[AGENCY_PHONE]       = "Enter Agency postal code:";
-    question[CONTACT]            = "Enter Agency phone:";
-    question[NAME]               = "Enter contact name:";
-    question[NOTE]               = "Enter a footer note:";
+    char question[][2][50] = {
+        { "client", "Enter client name:"},
+        { "agency_name","Enter Agency name:"},
+        { "agency_address", "Enter Agency address:"},
+        { "agency_location", "Enter Agency location:"},
+        { "agency_postal_code", "Enter Agency postal code:"},
+        { "agency_phone", "Enter Agency phone:"},
+        { "contact", "Enter contact name:"},
+        { "name", "Enter your name:"},
+        { "note", "Enter a footer note:"}
+    };
 
     char *answer[9];
     for (int i = 0; i < 9; i++ ) {
-        printf("question [%i] %s \n", i, question[i] );
-       // scanf ("%s", answer[i] );
+        printf("(%i/9) %s \n", i+1, question[i][1] );
+        char* ch = malloc (100);
+        scanf ("%[^\n^\r]%*c", ch);
+        answer[i] = ch;
     }
 
+    printf("Summary:\n----------\n");
     for (int i = 0; i < 9; i++ ) {
-        //printf("answer %s \n", answer[i] );
+        printf("%s: %s \n", question[i][0], answer[i] );
     }
-    
-
+   
+    printf("Save entered infos? [Y/n]"); 
+    char yn; 
+    scanf("%c", &yn);
 
 }
 
