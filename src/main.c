@@ -7,6 +7,7 @@
 #include "timesheet.h"
 #include "init.h"
 #include "day_parse.h"
+#include "read_README.h"
 
 int main(int argc, char **argv) {
     int c;
@@ -22,7 +23,7 @@ int main(int argc, char **argv) {
             {"init",    no_argument,       0, 'i'},
             {"work",    required_argument, 0, 'w'},
             {"off",     required_argument, 0, 'o'},
-            {"verbose", no_argument,       0,  0 },
+            {"help",    no_argument,       0, 'h'},
             {0,         0,                 0,  0 }
         };
 
@@ -86,15 +87,15 @@ int main(int argc, char **argv) {
                 // Prompt init question
                 prompt_init();
 
-
                 break;
 
             case 'v':
                 printf("option c with value '%s'\n", optarg);
                 break;
 
-            case 'd':
-                printf("option d with value '%s'\n", optarg);
+            case 'h':
+                printf("option h with value '%s'\n", optarg);
+                rEADME_file_content();
                 break;
 
             case '?':
