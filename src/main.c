@@ -9,6 +9,8 @@
 #include "day_parse.h"
 #include "read_README.h"
 
+static const char APP_VERSION[] = "0.1";
+
 int main(int argc, char **argv) {
     int c;
     int digit_optind = 0;
@@ -20,6 +22,7 @@ int main(int argc, char **argv) {
         int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
+            {"version", no_argument,       0, 'v'},
             {"init",    no_argument,       0, 'i'},
             {"work",    required_argument, 0, 'w'},
             {"off",     required_argument, 0, 'o'},
@@ -90,7 +93,7 @@ int main(int argc, char **argv) {
                 break;
 
             case 'v':
-                printf("option c with value '%s'\n", optarg);
+                printf("%s\n", APP_VERSION);
                 break;
 
             case 'h':
