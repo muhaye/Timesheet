@@ -798,11 +798,11 @@ uninstall-am: uninstall-dist_docDATA
 
 
 README: README.md
-        fgrep -v "[Build Status]" $< \
+	fgrep -v "[Build Status]" $< \
                 | markdown \
                 | html2text -style pretty -nobs \
                 | sed -e 's:&gt;:>:g' \
-                > $@.tmp
+                > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

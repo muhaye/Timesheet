@@ -3,7 +3,7 @@
 #include <string.h>
 #include "read_README.h"
 
-const char *READMEFile = "README.md";
+const char *READMEFile = "README";
 
 void rEADME_file_content() {
 

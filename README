@@ -1,12 +1,10 @@
+Usage: timesheet [--init][--help]
+                 [--work r{from-to}] [--off d{day1,day2,...}]
 
+Start a working context 
+    --init will prompt for information about the timesheet constants
 
-Timesheet
+Generate a timesheet for a month
+    --work Specify working range or days for the last month
+    --off  Specify off days range of days for the last month 
 
-Command line tool to create Timesheet
-
-
-Usage
-
-init
-./timesheet --init create timesheet
-./timesheet --work r1-21 --off d12,13,14 ./timesheet --work r1-21 --off r5-15

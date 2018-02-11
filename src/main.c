@@ -32,7 +32,8 @@ int main(int argc, char **argv) {
 
         c = getopt_long(argc, argv, "abc:d:012",
                 long_options, &option_index);
-        if (c == -1)
+
+        if (c == -1) 
             break;
 
         switch (c) {
@@ -89,7 +90,6 @@ int main(int argc, char **argv) {
                 init_working_dir();
                 // Prompt init question
                 prompt_init();
-
                 break;
 
             case 'v':
@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
                 break;
 
             case 'h':
-                printf("option h with value '%s'\n", optarg);
                 rEADME_file_content();
                 break;
 
@@ -114,6 +113,7 @@ int main(int argc, char **argv) {
         while (optind < argc)
             printf("%s ", argv[optind++]);
         printf("\n");
+        rEADME_file_content();
     }else{
         if (dr.from > 0 ) {
             timesheet_with_dayoff(dr.from, dr.to, day_off);
